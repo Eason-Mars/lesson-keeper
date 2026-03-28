@@ -15,6 +15,8 @@ Most AI agents forget corrections between sessions. You correct a mistake, the a
 
 3. **Iron rule promotion** — when `Recurrence-Count ≥ 3`, the error gets promoted into the agent's main config file as an inescapable rule with a verifiable enforcement command, not just a note. Structural problems require structural solutions.
 
+4. **Task Reviewer** — a proactive post-task review module. After any multi-step task, run `log-review.sh` to log what went well and what could improve. Improvement points are appended to `task-reviews.md` and optionally surfaced in `CONTEXT.md`. When the same improvement appears ≥2 times, the script warns you to escalate to the full lesson-keeper atomic op — turning self-noticed patterns into durable rules before they become repeated mistakes.
+
 <details>
 <summary>📖 中文说明</summary>
 
@@ -228,6 +230,7 @@ lesson-keeper/
 │   └── promotion-rules.md          # Iron rule promotion protocol
 ├── scripts/
 │   ├── log-correction.sh           # Atomic three-step writer (main tool)
+│   ├── log-review.sh               # Task Reviewer: post-task active review
 │   ├── grade_eval.py               # Assertion-based eval grader
 │   ├── run_eval_openclaw.py        # Trigger evaluation runner
 │   └── run_loop_openclaw.py        # Eval + description improvement loop

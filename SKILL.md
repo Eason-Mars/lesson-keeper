@@ -28,6 +28,8 @@ description: >
 | New fact / knowledge update | Write learning record | `log-correction.sh --type knowledge --title ... --fact ... --source ...` |
 | BAD entry Recurrence-Count ≥ 3 | Promote to iron rule | See [promotion-rules.md](references/promotion-rules.md) |
 | Weekly review | Weekly scan | Read `references/bad-good-examples.md`, check all BAD entries |
+| **Post-task active review** | Task Reviewer (proactive) | `log-review.sh --workspace ... --task ... --what-done ... --how-long ... --what-worked ... [--improvement ...] [--skills-used ...]` |
+| **Same improvement ≥2 times** | Escalate to lesson-keeper | Run `log-correction.sh` three-step atomic op (log-review.sh auto-warns) |
 
 Script path: `~/.openclaw/workspace/.agents/skills/lesson-keeper/scripts/log-correction.sh`
 
@@ -135,6 +137,87 @@ Run every week (or on explicit review request):
 3. Check if any entry now has Recurrence-Count ≥ 3 → promote if so
 4. Scan `memory/feature-requests.md` for pending items that can be advanced
 5. Write weekly summary to `memory/YYYY-MM-DD.md`
+
+---
+
+## Task Reviewer (Active Review)
+
+> **Why this exists**: lesson-keeper captures *reactive* corrections when you're told you're wrong. Task Reviewer captures *proactive* improvements you notice yourself after completing a task. Together they form a complete learning loop.
+
+### When to trigger
+
+- **After any multi-step task**: any task with 2+ steps (spawning sub-agents, running scripts, writing reports) — trigger automatically on completion
+- **When asked "how did you do that?"**: if the user or team asks about your process or time spent
+- **As the final step of a task completion checklist**: embed at the end of your standard task review
+
+### Relationship to lesson-keeper
+
+```
+task-reviewer (proactive review)
+    ↓ finds improvement point
+task-reviews.md (full log)
+    ↓ same type of improvement ≥2 times
+⚠️ auto-warning: recommend escalation
+    ↓ manually triggered
+lesson-keeper three-step atomic op
+    ↓ writes to all three places
+mistake-log.md + CONTEXT.md + bad-good-examples.md
+    ↓ Recurrence-Count ≥ 3
+AGENTS.md iron rule
+```
+
+**Key distinction**:
+- Task Reviewer: lightweight, proactive, self-reflective — suited for task-level retrospectives
+- lesson-keeper: heavyweight, reactive, structural — suited for recurring structural errors
+
+**Escalation threshold**: when the same improvement type appears **≥2 times** in `task-reviews.md`, it's no longer a one-off — use lesson-keeper to lock it in as a BAD/GOOD entry.
+
+### Usage
+
+**With an improvement point (writes to CONTEXT.md 📌 TODO)**:
+
+```bash
+bash ~/.openclaw/workspace/.agents/skills/lesson-keeper/scripts/log-review.sh \
+  --workspace ~/.openclaw/workspace \
+  --task "Extended lesson-keeper skill with task-reviewer module" \
+  --what-done "Added log-review.sh, memory/task-reviews.md, updated SKILL.md" \
+  --how-long "~25 minutes" \
+  --what-worked "Read existing script structure before designing, kept style consistent with log-correction.sh" \
+  --improvement "Next time confirm the exact location of 📌 TODO block in CONTEXT.md first" \
+  --skills-used "lesson-keeper"
+```
+
+**Without an improvement point (does not touch CONTEXT.md)**:
+
+```bash
+bash ~/.openclaw/workspace/.agents/skills/lesson-keeper/scripts/log-review.sh \
+  --workspace ~/.openclaw/workspace \
+  --task "Generated stock research report" \
+  --what-done "Produced quantitative reports for 5 stocks with ATR/MA/RSI indicators" \
+  --how-long "~8 minutes" \
+  --what-worked "Direct pipeline call, no rework needed"
+```
+
+### Parameters
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `--workspace` | ✅ | Workspace root path |
+| `--task` | ✅ | Task title (concise description) |
+| `--what-done` | ✅ | What was completed, concrete output |
+| `--how-long` | ✅ | Time estimate |
+| `--what-worked` | ✅ | What went well — reinforces positive patterns |
+| `--improvement` | ❌ optional | What could be improved — **only fill if applicable**; omitting it leaves CONTEXT.md untouched |
+| `--skills-used` | ❌ optional | Skills used, comma-separated |
+
+### Write targets
+
+| File | Written when | Content |
+|------|-------------|---------|
+| `{WORKSPACE}/memory/task-reviews.md` | Always | Full review entry (append) |
+| `{WORKSPACE}/CONTEXT.md` → `📌 TODO` | Only when `--improvement` is set | TODO line: `📋 [REVIEW] task → improvement point` |
+
+Script path: `~/.openclaw/workspace/.agents/skills/lesson-keeper/scripts/log-review.sh`
 
 ---
 
