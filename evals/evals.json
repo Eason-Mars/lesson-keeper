@@ -1,0 +1,138 @@
+{
+  "skill_name": "lesson-keeper",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "You just performed a task directly that should have been routed to a specialized sub-agent. The user says: 'Stop — that type of task always goes to the dedicated agent, not you.' Please handle this correction using the self-improvement skill. workspace: /tmp/si-pub-eval1",
+      "expected_output": "Three-step atomic operation complete: mistake-log + CONTEXT + bad-good-examples all written, script preferred",
+      "assertions": [
+        {
+          "id": "e1-a1",
+          "name": "mistake-log file exists and is non-empty",
+          "check": "file_exists",
+          "path": "/tmp/si-pub-eval1/memory/mistake-log.md",
+          "min_lines": 5
+        },
+        {
+          "id": "e1-a2",
+          "name": "CONTEXT.md lessons section has an entry (routing-related)",
+          "check": "file_contains",
+          "path": "/tmp/si-pub-eval1/CONTEXT.md",
+          "contains": ["教训", "routing"]
+        },
+        {
+          "id": "e1-a3",
+          "name": "bad-good-examples has a BAD entry",
+          "check": "file_contains",
+          "path": "/tmp/si-pub-eval1/references/bad-good-examples.md",
+          "contains": ["BAD"]
+        },
+        {
+          "id": "e1-a4",
+          "name": "bad-good-examples has Recurrence-Count field",
+          "check": "file_contains",
+          "path": "/tmp/si-pub-eval1/references/bad-good-examples.md",
+          "contains": ["复发次数"]
+        },
+        {
+          "id": "e1-a5",
+          "name": "mistake-log contains root cause analysis fields",
+          "check": "file_contains",
+          "path": "/tmp/si-pub-eval1/memory/mistake-log.md",
+          "contains": ["场景", "错误", "根因", "修复"]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "The user points out: 'You sent a report without running the quality-check step first. This is the third time this has happened.' Please handle this correction and apply the promotion protocol if required. workspace: /tmp/si-pub-eval2 (note: bad-good-examples.md already has this BAD entry with Recurrence-Count of 2)",
+      "expected_output": "Three-step atomic op + promotion protocol: agent config file written with trigger+rule+verification fields marked as iron rule",
+      "assertions": [
+        {
+          "id": "e2-a1",
+          "name": "mistake-log entry written",
+          "check": "file_exists",
+          "path": "/tmp/si-pub-eval2/memory/mistake-log.md",
+          "min_lines": 5
+        },
+        {
+          "id": "e2-a2",
+          "name": "bad-good-examples Recurrence-Count updated to 3",
+          "check": "file_contains",
+          "path": "/tmp/si-pub-eval2/references/bad-good-examples.md",
+          "contains": ["3次"]
+        },
+        {
+          "id": "e2-a3",
+          "name": "agent config file exists (promotion target)",
+          "check": "file_exists",
+          "path": "/tmp/si-pub-eval2/AGENTS.md",
+          "min_lines": 3
+        },
+        {
+          "id": "e2-a4",
+          "name": "agent config file contains verification command",
+          "check": "file_contains",
+          "path": "/tmp/si-pub-eval2/AGENTS.md",
+          "contains": ["验证"]
+        },
+        {
+          "id": "e2-a5",
+          "name": "CONTEXT.md marks entry as IRON RULE",
+          "check": "file_contains",
+          "path": "/tmp/si-pub-eval2/CONTEXT.md",
+          "contains": ["IRON RULE", "铁律"]
+        },
+        {
+          "id": "e2-a6",
+          "name": "bad-good-examples marks entry as promoted",
+          "check": "file_contains",
+          "path": "/tmp/si-pub-eval2/references/bad-good-examples.md",
+          "contains": ["已升级", "铁律"]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "The user says: 'I'd love it if, after any automated pipeline finishes, you automatically sent me a brief summary so I don't have to go looking for the results.' Please record this as a feature request. workspace: /tmp/si-pub-eval3",
+      "expected_output": "feature-requests.md written with all 7 fields + CONTEXT.md trace left",
+      "assertions": [
+        {
+          "id": "e3-a1",
+          "name": "feature-requests.md exists and contains FEAT entry ID",
+          "check": "file_contains",
+          "path": "/tmp/si-pub-eval3/memory/feature-requests.md",
+          "contains": ["FEAT-"]
+        },
+        {
+          "id": "e3-a2",
+          "name": "feature-requests.md contains all 7 required fields",
+          "check": "file_contains",
+          "path": "/tmp/si-pub-eval3/memory/feature-requests.md",
+          "contains": ["日期", "来源", "需求", "场景", "优先级", "状态", "实现建议"]
+        },
+        {
+          "id": "e3-a3",
+          "name": "feature-requests.md status is pending",
+          "check": "file_contains",
+          "path": "/tmp/si-pub-eval3/memory/feature-requests.md",
+          "contains": ["pending"]
+        },
+        {
+          "id": "e3-a4",
+          "name": "CONTEXT.md contains feature request trace",
+          "check": "file_contains",
+          "path": "/tmp/si-pub-eval3/CONTEXT.md",
+          "contains": ["FEAT", "pipeline", "summary"]
+        },
+        {
+          "id": "e3-a5",
+          "name": "feature-requests.md contains implementation suggestion",
+          "check": "file_contains",
+          "path": "/tmp/si-pub-eval3/memory/feature-requests.md",
+          "contains": ["实现"]
+        }
+      ]
+    }
+  ]
+}
