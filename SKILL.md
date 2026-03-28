@@ -1,5 +1,6 @@
 ---
 name: lesson-keeper
+version: 1.1.0
 description: >
   Use this skill when you or your agent is corrected, makes a mistake, or needs to durably log
   a learning, feature request, error, or knowledge update. Built specifically for OpenClaw —

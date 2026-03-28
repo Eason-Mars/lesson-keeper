@@ -1,5 +1,7 @@
 # lesson-keeper
 
+![version](https://img.shields.io/badge/version-1.1.0-blue)
+
 > Stop re-learning the same lessons. Turn corrections into permanent behavioral change.
 > 让每一次纠正都永久生效——不再重蹈覆辙。
 
@@ -250,3 +252,15 @@ Built with deeper OpenClaw integration, atomic enforcement, and verified test co
 ## License
 
 MIT
+
+## Changelog
+
+### v1.1.0 (2026-03-28)
+- Added task-reviewer module for active post-task review
+- `log-review.sh` atomic write to task-reviews.md + CONTEXT.md
+- Auto-escalation: same improvement ≥2 times → lesson-keeper three-step atomic op
+
+### v1.0.0 (initial release)
+- Core lesson-keeper: three-step atomic write (mistake-log + CONTEXT + bad-good-examples)
+- `log-correction.sh` with 4 modes: correction / feature-request / error / knowledge
+- Promotion protocol: Recurrence-Count ≥3 → iron rule
