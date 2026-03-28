@@ -76,7 +76,7 @@ lesson-keeper 内置 `run_eval_openclaw.py`——唯一随 Skill 附带 OpenClaw
 npx clawhub@latest install lesson-keeper
 
 # Manual
-git clone https://github.com/YOUR_GITHUB_USERNAME/lesson-keeper \
+git clone https://github.com/Eason-Mars/lesson-keeper \
   ~/.openclaw/workspace/.agents/skills/lesson-keeper
 ```
 
