@@ -32,7 +32,7 @@ description: >
 | **Post-task active review** | Task Reviewer (proactive) | `log-review.sh --workspace ... --task ... --what-done ... --how-long ... --what-worked ... [--improvement ...] [--skills-used ...]` |
 | **Same improvement ≥2 times** | Escalate to lesson-keeper | Run `log-correction.sh` three-step atomic op (log-review.sh auto-warns) |
 
-Script path: `~/.openclaw/workspace/.agents/skills/lesson-keeper/scripts/log-correction.sh`
+Script path: `{SKILL_DIR}/scripts/log-correction.sh`
 
 ---
 
@@ -53,8 +53,8 @@ When corrected, these three steps must all complete in the same session turn. He
 Calling the script is the preferred way to execute the three steps — it's faster, atomic, and eliminates formatting errors.
 
 ```bash
-bash ~/.openclaw/workspace/.agents/skills/lesson-keeper/scripts/log-correction.sh \
-  --workspace ~/.openclaw/workspace \
+bash {SKILL_DIR}/scripts/log-correction.sh \
+  --workspace {WORKSPACE} \
   --title "Skipped routing step" \
   --scene "Did task directly instead of routing to the appropriate agent" \
   --error "Violated routing rule: task type X goes to Agent Y" \
@@ -68,9 +68,9 @@ The script handles all three writes atomically. See [logging-formats.md](referen
 For **feature requests**, use the `--type feature-request` variant — it writes to `feature-requests.md` AND leaves a trace in `CONTEXT.md` so the request survives to the next session:
 
 ```bash
-bash ~/.openclaw/workspace/.agents/skills/lesson-keeper/scripts/log-correction.sh \
+bash {SKILL_DIR}/scripts/log-correction.sh \
   --type feature-request \
-  --workspace ~/.openclaw/workspace \
+  --workspace {WORKSPACE} \
   --title "Auto-send summary after pipeline completes" \
   --need "After a pipeline completes, automatically send a brief summary to the user" \
   --scene "User wants to see results inline without navigating to another channel" \
@@ -121,7 +121,7 @@ Each agent maintains its own data files. The `{WORKSPACE}` variable resolves per
 | Feature requests | `{WORKSPACE}/memory/feature-requests.md` |
 | Hot memory | `{WORKSPACE}/CONTEXT.md` → lessons section |
 
-**Default workspace**: `~/.openclaw/workspace` (set `--workspace` to your project root).
+**Default workspace**: `{WORKSPACE}` (set `--workspace` to your project root).
 
 **For generic use**: default `{WORKSPACE}` to `.learnings/` in the project root if no workspace config exists.
 
@@ -178,8 +178,8 @@ AGENTS.md iron rule
 **With an improvement point (writes to CONTEXT.md 📌 TODO)**:
 
 ```bash
-bash ~/.openclaw/workspace/.agents/skills/lesson-keeper/scripts/log-review.sh \
-  --workspace ~/.openclaw/workspace \
+bash {SKILL_DIR}/scripts/log-review.sh \
+  --workspace {WORKSPACE} \
   --task "Extended lesson-keeper skill with task-reviewer module" \
   --what-done "Added log-review.sh, memory/task-reviews.md, updated SKILL.md" \
   --how-long "~25 minutes" \
@@ -191,8 +191,8 @@ bash ~/.openclaw/workspace/.agents/skills/lesson-keeper/scripts/log-review.sh \
 **Without an improvement point (does not touch CONTEXT.md)**:
 
 ```bash
-bash ~/.openclaw/workspace/.agents/skills/lesson-keeper/scripts/log-review.sh \
-  --workspace ~/.openclaw/workspace \
+bash {SKILL_DIR}/scripts/log-review.sh \
+  --workspace {WORKSPACE} \
   --task "Generated stock research report" \
   --what-done "Produced quantitative reports for 5 stocks with ATR/MA/RSI indicators" \
   --how-long "~8 minutes" \
@@ -218,7 +218,7 @@ bash ~/.openclaw/workspace/.agents/skills/lesson-keeper/scripts/log-review.sh \
 | `{WORKSPACE}/memory/task-reviews.md` | Always | Full review entry (append) |
 | `{WORKSPACE}/CONTEXT.md` → `📌 TODO` | Only when `--improvement` is set | TODO line: `📋 [REVIEW] task → improvement point` |
 
-Script path: `~/.openclaw/workspace/.agents/skills/lesson-keeper/scripts/log-review.sh`
+Script path: `{SKILL_DIR}/scripts/log-review.sh`
 
 ---
 
