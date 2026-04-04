@@ -1,6 +1,6 @@
 ---
 name: lesson-keeper
-version: 1.1.0
+version: 2.0.0
 description: >
   Use this skill when you or your agent is corrected, makes a mistake, or needs to durably log
   a learning, feature request, error, or knowledge update. Built specifically for OpenClaw —
@@ -227,3 +227,107 @@ Script path: `{SKILL_DIR}/scripts/log-review.sh`
 - When QC'ing a sub-agent output, check whether any known BAD patterns appear in the result
 - If a sub-agent shows the same error type across multiple sessions, recommend iron-rule promotion in that agent's config file
 - Monthly: tally agents with Recurrence-Count ≥ 3 entries, surface for batch iron-rule promotion
+
+---
+
+## Active Reflection (v2.0+) — Proactive Improvement Discovery
+
+> **New in v2.0**: Don't wait to be corrected. Proactively identify optimizations and submit for user confirmation. **Critical rule: Proposal ≠ Implementation. Always wait for explicit approval before executing.**
+
+### Flow
+
+```
+Complex task completes
+  ↓
+[Reflect] Found improvement opportunity?
+  ├─ Yes → Write to `memory/improvement-proposals.md`
+  │         ↓
+  │         User confirms → Implement + record to `memory/completed-improvements.md`
+  │
+  └─ No → Task complete (nothing to propose)
+```
+
+### Structure
+
+**improvement-proposals.md** (Pending user review)
+```markdown
+## 待审批（Pending User Review）
+
+### 1. 【System Name】Improvement Title (YYYY-MM-DD)
+
+**Background**: Why you discovered this
+
+**Optimization point**: Specific thing to change
+
+**Proposed solution**: How to implement it
+
+**Expected benefit**: What gets better
+
+**Need your confirmation on**: Any questions or uncertainties
+```
+
+**completed-improvements.md** (History of approved + executed improvements)
+```markdown
+## 已确认 & 已实施（Approved & Executed）
+
+### 1. 【System Name】Improvement Title (YYYY-MM-DD)
+
+**Confirmed date**: When user approved
+**Execution date**: When I implemented
+**Changes made**: Exactly what changed
+**Result**: The difference after execution
+```
+
+### When to Propose
+
+✅ **Always propose**:
+- Found a simpler way to do something repetitive
+- Discovered a bottleneck or inefficiency
+- Something manual that could be automated
+- Pattern found across multiple tasks
+
+❌ **Never propose** (these need other paths):
+- Corrections you were already told about (use three-step atomic op)
+- Changes needing extensive rewrites (ask first, don't propose)
+- Things you're uncertain the user wants
+
+### Example
+
+```
+## 待审批
+
+### 1. 【Task Dispatch】Consolidate three-step flow into single script (2026-04-05)
+
+**Background**:
+Task dispatch is currently three separate commands + manual logging.
+Easy to skip a step. Data gets lost.
+
+**Optimization point**:
+Merge into single-entry script + auto-log to database
+
+**Proposed solution**:
+1. New `dispatch-and-spawn.sh` (one command, not three)
+2. Add `task_dispatch_log` table (automatic audit trail)
+3. Zero possibility of lost tasks
+
+**Expected benefit**:
+- From 3 commands → 1 command
+- Complete immutable log (can't lose tasks anymore)
+- Prevents 2026-04-02 data-loss scenario repeating
+
+**Need your confirmation**:
+How often should I send proposals? (Daily / Weekly / After complex tasks?)
+```
+
+User replies: ✅ "Go for it" → You execute + move to completed-improvements.md
+
+---
+
+## Key Rule for Active Reflection
+
+**Do not self-decide.** Finding something good ≠ permission to implement.
+
+- ❌ Find improvement → Execute immediately
+- ✅ Find improvement → Propose → Wait for approval → Execute
+
+This keeps you accountable and user in control.
