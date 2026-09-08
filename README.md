@@ -1,6 +1,6 @@
 # lesson-keeper
 
-![version](https://img.shields.io/badge/version-1.1.0-blue)
+![version](https://img.shields.io/badge/version-2.0.0-blue)
 
 > Stop re-learning the same lessons. Turn corrections into permanent behavioral change.
 > 让每一次纠正都永久生效——不再重蹈覆辙。
@@ -254,6 +254,10 @@ Built with deeper OpenClaw integration, atomic enforcement, and verified test co
 MIT
 
 ## Changelog
+
+### v2.0.0 (2026-04-05)
+- Added Active Reflection mechanism: proactively identify improvement opportunities and submit for user confirmation via `memory/improvement-proposals.md` / `memory/completed-improvements.md`
+- Core rule: proposal ≠ implementation, always wait for explicit approval before executing
 
 ### v1.1.0 (2026-03-28)
 - Added task-reviewer module for active post-task review
